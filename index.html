@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>World Atlas of Change</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#040404">
+<meta name="description" content="Touch the globe to learn how borders, wars and foreign powers shaped the Middle East from 1886 to today. Every fact is sourced.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Geist:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="vendor/maplibre-gl.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- icon sprite: one line-icon language for roles and goals -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-fight" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19M3.5 15.5l5 5M15.5 20.5l5-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-troops" viewBox="0 0 24 24"><path d="M4 15.5a8 8 0 0 1 16 0M2.5 15.5h19M8 15.5v2.5h8v-2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-support" viewBox="0 0 24 24"><path d="M4 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="12" r="1.6" fill="currentColor"/></symbol>
+    <symbol id="i-occupy" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 12l8-8M4 20 20 4M12 20l8-8" stroke="currentColor" stroke-width="1.3"/></symbol>
+    <symbol id="i-lost" viewBox="0 0 24 24"><path d="M6 21V4h10l-2 3.5 2 3.5H6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 3l18 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-peace" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m10 14 2 2 4-4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-territory" viewBox="0 0 24 24"><path d="M6 21V4h11l-2.5 4 2.5 4H6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-government" viewBox="0 0 24 24"><path d="M3 9.5 12 4l9 5.5M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20.5h18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-civil" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5C7 4 10 4 12 6c2-2 5-2 8-.5V19c-3-1.5-6-1.5-8 .5-2-2-5-2-8-.5z M12 6v13.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<div id="map" role="application" aria-label="Globe. Tap a country to learn about it."></div>
+<div class="shade" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Atlas of Change</div>
+  <div class="actions">
+    <button class="icon" id="searchBtn" aria-label="Search" title="Search">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m15 15 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <button class="icon" id="shareBtn" aria-label="Copy link to this view" title="Copy link">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4 4 4M6 12v6a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="yearbox" id="yearbox">
+  <div class="year" id="yearLabel">2025</div>
+  <button class="year-sum" id="yearSum">Loading the atlas…</button>
+</div>
+
+<!-- the one sheet: timeline on top, then everything you tapped, in one continuous scroll -->
+<section class="sheet" id="sheet" data-state="closed" aria-label="Timeline and details">
+  <div class="sheet-grip" id="grip" role="button" tabindex="0" aria-label="Drag up for more, down to close"><span></span></div>
+  <div class="timeline">
+    <button class="play" id="playBtn" aria-label="Play through time" aria-pressed="false">
+      <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path id="playIcon" d="M7 5v14l12-7z" fill="currentColor"/></svg>
+    </button>
+    <div class="track">
+      <canvas id="spark" aria-hidden="true"></canvas>
+      <input type="range" id="yearRange" min="1886" max="2025" step="1" value="2025" aria-label="Year">
+    </div>
+    <button class="icon" id="layersBtn" aria-label="Map key" aria-expanded="false" title="Map key">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="7.8" r="1" fill="currentColor"/></svg>
+    </button>
+  </div>
+  <p class="hint" id="hint">Tap a country or a marker to see what happened there. Drag the timeline to travel back in time.</p>
+  <div class="sheet-head" id="sheetHead" hidden>
+    <button class="icon small" id="sheetBack" aria-label="Back" hidden>
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span class="sheet-kicker" id="sheetKicker"></span>
+    <button class="icon small" id="sheetClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body" id="sheetBody"></div>
+</section>
+
+<div class="popover" id="keyPanel" hidden>
+  <h3>Reading the globe</h3>
+  <div class="key">
+    <div><span class="sw war"></span>War-level fighting that year (1,000+ battle deaths)</div>
+    <div><span class="sw minor"></span>Smaller armed conflict</div>
+    <div><span class="sw hatch"></span>Occupied territory</div>
+    <div><span class="sw ev"></span>Where fighting happened (from 1989)</div>
+  </div>
+  <h3>Roles</h3>
+  <div class="key icons">
+    <div><svg class="ic"><use href="#i-fight"/></svg>Main party in the fighting</div>
+    <div><svg class="ic"><use href="#i-troops"/></svg>Sent troops to help a side</div>
+    <div><svg class="ic"><use href="#i-support"/></svg>Backed a side (arms, money, bases…)</div>
+    <div><svg class="ic"><use href="#i-occupy"/></svg>Occupied territory</div>
+    <div><svg class="ic"><use href="#i-peace"/></svg>Signed a peace agreement</div>
+    <div><svg class="ic"><use href="#i-territory"/></svg>Fought over territory</div>
+    <div><svg class="ic"><use href="#i-government"/></svg>Fought over who governs</div>
+  </div>
+  <h3>Show</h3>
+  <label><input type="checkbox" id="lyr-events1" data-layer="events1" checked> Fighting locations</label>
+  <label><input type="checkbox" id="lyr-events3" data-layer="events3"> Violence against civilians</label>
+  <label><input type="checkbox" id="lyr-occupation" data-layer="occupation" checked> Occupied territory</label>
+</div>
+
+<div class="tip" id="tip" role="tooltip" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="modal" id="searchModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="Search">
+    <input id="searchInput" type="search" placeholder="Search a country, a war or a year" autocomplete="off" aria-label="Search" aria-controls="searchResults">
+    <ul class="results" id="searchResults" role="listbox"></ul>
+  </div>
+</div>
+
+<script src="vendor/maplibre-gl.js" charset="utf-8"></script>
+<script src="app.js" charset="utf-8"></script>
+</body>
+</html>
