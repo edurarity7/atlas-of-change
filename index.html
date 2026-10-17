@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#040404">
+<meta name="theme-color" content="#030303">
 <meta name="description" content="Touch the globe to learn how borders, wars and foreign powers shaped the Middle East from 1886 to today. Every fact is sourced.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,7 +67,7 @@
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="7.8" r="1" fill="currentColor"/></svg>
     </button>
   </div>
-  <p class="hint" id="hint">Tap a country or a marker to see what happened there. Drag the timeline to travel back in time.</p>
+  <p class="hint" id="hint">Tap any country to see who it fought, helped and backed, as arrows around the globe. Drag the timeline to travel in time.</p>
   <div class="sheet-head" id="sheetHead" hidden>
     <button class="icon small" id="sheetBack" aria-label="Back" hidden>
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -81,22 +81,21 @@
 </section>
 
 <div class="popover" id="keyPanel" hidden>
-  <h3>Reading the globe</h3>
+  <h3>The dots</h3>
   <div class="key">
-    <div><span class="sw war"></span>War-level fighting that year (1,000+ battle deaths)</div>
-    <div><span class="sw minor"></span>Smaller armed conflict</div>
-    <div><span class="sw hatch"></span>Occupied territory</div>
+    <div><span class="sw d-war"></span>Country at war that year (1,000+ battle deaths)</div>
+    <div><span class="sw d-minor"></span>Smaller armed conflict</div>
+    <div><span class="sw d-occ"></span>Occupied territory</div>
     <div><span class="sw ev"></span>Where fighting happened (from 1989)</div>
   </div>
-  <h3>Roles</h3>
-  <div class="key icons">
-    <div><svg class="ic"><use href="#i-fight"/></svg>Main party in the fighting</div>
-    <div><svg class="ic"><use href="#i-troops"/></svg>Sent troops to help a side</div>
-    <div><svg class="ic"><use href="#i-support"/></svg>Backed a side (arms, money, bases…)</div>
-    <div><svg class="ic"><use href="#i-occupy"/></svg>Occupied territory</div>
-    <div><svg class="ic"><use href="#i-peace"/></svg>Signed a peace agreement</div>
-    <div><svg class="ic"><use href="#i-territory"/></svg>Fought over territory</div>
-    <div><svg class="ic"><use href="#i-government"/></svg>Fought over who governs</div>
+  <h3>The arrows, after you tap a country</h3>
+  <div class="key">
+    <div><span class="ar red"></span>Fought each other, or on opposing sides</div>
+    <div><span class="ar white"></span>Sent troops to help</div>
+    <div><span class="ar white dash"></span>Backed a government (arms, money, bases…)</div>
+    <div><span class="ar red dash"></span>Backed armed groups inside a country</div>
+    <div><span class="ar green"></span>Signed a peace agreement</div>
+    <div><span class="ar faint"></span>The same, in other years</div>
   </div>
   <h3>Show</h3>
   <label><input type="checkbox" id="lyr-events1" data-layer="events1" checked> Fighting locations</label>
