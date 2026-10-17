@@ -18,7 +18,7 @@
   const ARC = { red: "255,74,61", white: "246,244,238", green: "127,207,160" };
 
   // ------------------------------------------------------------------ data
-  const load = (f) => fetch("data/" + f).then((r) => { if (!r.ok) throw new Error(f + " (" + r.status + ")"); return r.json(); });
+  const load = (f) => fetch("data/" + f + "?v=5").then((r) => { if (!r.ok) throw new Error(f + " (" + r.status + ")"); return r.json(); });
   let places, dots, countries, cdata, events, support, peace, meta, S;
   try {
     [places, dots, countries, cdata, events, support, peace, meta, S] = await Promise.all(
